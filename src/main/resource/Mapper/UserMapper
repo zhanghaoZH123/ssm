@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.dao.UserDao">
+    <resultMap id="BaseResultMap" type="com.ssm.model.User">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="cname" jdbcType="VARCHAR" property="cname"/>
+        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime"/>
+        <result column="valid_until_time" property="validUntilTime" jdbcType="DATE"/>
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.ssm.model.User" extends="BaseResultMap">
+        <result column="profile" property="profile" jdbcType="LONGVARBINARY"
+                typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, username, password, status, email, cname, mobile, create_time, last_login_time,
+        valid_until_time
+    </sql>
+    <sql id="Blob_Column_List">
+        profile
+    </sql>
+    <!-- 根据username返回user对象 -->
+    <select id="selectByUsername" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from user
+        where username = #{username,jdbcType=VARCHAR}
+    </select>
+</mapper>
